@@ -1,10 +1,13 @@
 package com.gabrielc.worklog;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 
 import com.orhanobut.logger.Logger;
 
@@ -15,9 +18,13 @@ public class CountdownService extends Service {
 
     public static final String COUNTDOWN_BR = "com.gabrielc.worklog.countdown_br";
     public static final String KEY_COUNTDOWN_INTENT = "COUNTDOWN";
+    public static final int NOTIFICATION_ID = 1;
 
     private CountdownBinder mBinder;
     private Intent mBroadcastIntent;
+
+    private NotificationCompat.Builder mNotificationBuilder;
+    private NotificationManager mNotificationManager;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -33,10 +40,20 @@ public class CountdownService extends Service {
         super.onCreate();
         mBinder = new CountdownBinder();
         mBroadcastIntent = new Intent(COUNTDOWN_BR);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         Logger.d("onCreate CountdownService");
     }
 
     private void startCountdown(final long seconds) {
+        mNotificationBuilder = new NotificationCompat.Builder(this)
+                .setContentText("X secs lefts")
+                .setContentTitle("WorkLog")
+                .setSmallIcon(R.drawable.pugnotification_ic_launcher)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true);
+
         CountDownTimerPauseable countDownTimer = new CountDownTimerPauseable(seconds * 1000, 1000) {
 
             @Override
@@ -45,6 +62,9 @@ public class CountdownService extends Service {
 //                Logger.d("onTick %d", secsUntilFinished);
                 mBroadcastIntent.putExtra(KEY_COUNTDOWN_INTENT, secsUntilFinished);
                 sendBroadcast(mBroadcastIntent);
+
+                mNotificationBuilder.setContentText(secsUntilFinished + " secs left");
+                mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
             }
 
             @Override

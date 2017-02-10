@@ -20,10 +20,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     public static final String MINUTES_TO_COUNTDOWN = "MINUTES_TO_COUNTDOWN";
-    public static final int NOTIFICATION_ID = 1;
-
-    private NotificationCompat.Builder mNotificationBuilder;
-    private NotificationManager mNotificationManager;
 
     @BindView(R.id.main_tv)
     TextView mMainTv;
@@ -35,23 +31,15 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Logger.d("onCreate");
 
-        mNotificationBuilder = new NotificationCompat.Builder(this)
-                .setContentText("X secs lefts")
-                .setContentTitle("WorkLog")
-                .setSmallIcon(R.drawable.pugnotification_ic_launcher)
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true);
-
         registerReceiver(mCountdownReceiver, new IntentFilter(CountdownService.COUNTDOWN_BR));
-        if (!isMyServiceRunning(CountdownService.class)) {
+        final boolean isMyServiceRunning = isMyServiceRunning(CountdownService.class);
+        Logger.d(isMyServiceRunning);
+        if (!isMyServiceRunning) {
             Logger.d("Starting service..");
             final Intent serviceIntent = new Intent(MainActivity.this, CountdownService.class);
             serviceIntent.putExtra(MINUTES_TO_COUNTDOWN, 1L);
             startService(serviceIntent);
         }
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
     }
 
     @Override
@@ -60,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Logger.d("onPause");
 
 //        stopService(new Intent(MainActivity.this, CountdownService.class));
-//        unregisterReceiver(mCountdownReceiver);
+        unregisterReceiver(mCountdownReceiver);
     }
 
     private BroadcastReceiver mCountdownReceiver = new BroadcastReceiver() {
@@ -71,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 Logger.d("Activity received %d", secsUntilFinished);
                 final String text = secsUntilFinished + " secounds left";
                 mMainTv.setText(text);
-                mNotificationBuilder.setContentText(text);
-                mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
             }
         }
     };
