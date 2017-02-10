@@ -3,7 +3,6 @@ package com.gabrielc.worklog;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -38,7 +37,7 @@ public class CountdownService extends Service {
     }
 
     private void startCountdown(final long seconds) {
-        CountDownTimer countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
+        CountDownTimerPauseable countDownTimer = new CountDownTimerPauseable(seconds * 1000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
