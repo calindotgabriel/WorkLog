@@ -75,7 +75,7 @@ public abstract class CountDownTimerPauseable {
         if(isPaused==false){
             countDownTimer.cancel();
         } else{
-            throw new IllegalStateException("CountDownTimerPauseable is already in pause state, start counter before pausing it.");
+            throw new IllegalStateException("CountDownTimerPauseable is already in pauseCountdown state, start counter before pausing it.");
         }
         isPaused = true;
     }
