@@ -28,25 +28,12 @@ public class CountdownService extends Service {
     private CountDownTimerPauseable mCountDownTimer;
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Logger.d("Service onStartCommand()");
-        final long minutes = intent.getLongExtra(MainActivity.MINUTES_TO_COUNTDOWN, 0);
-        final long seconds = minutes * 60;
-        startCountdown(seconds);
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
         mBinder = new CountdownBinder();
         mBroadcastIntent = new Intent(COUNTDOWN_BR);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Logger.d("onCreate CountdownService");
-    }
-
-    public void startCountdown(final long seconds) {
         mNotificationBuilder = new NotificationCompat.Builder(this)
                 .setContentText("X secs lefts")
                 .setContentTitle("WorkLog")
@@ -55,6 +42,10 @@ public class CountdownService extends Service {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true);
 
+        Logger.d("onCreate CountdownService");
+    }
+
+    public void startCountdown(final long seconds) {
         mCountDownTimer = new CountDownTimerPauseable(seconds * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

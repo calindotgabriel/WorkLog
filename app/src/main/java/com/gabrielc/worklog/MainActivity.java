@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Logger.d("onCreate");
 
-//        registerReceiver(mCountdownReceiver, new IntentFilter(CountdownService.COUNTDOWN_BR));
         final Intent serviceIntent = new Intent(MainActivity.this, CountdownService.class);
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
@@ -43,7 +43,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Logger.d("onStop");
-//        unbindService(mServiceConnection);
+        unregisterReceiver(mCountdownReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Logger.d("onDestroy");
+        if (isBound) {
+            unbindService(mServiceConnection);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mCountdownReceiver, new IntentFilter(CountdownService.COUNTDOWN_BR));
     }
 
     @Override
