@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.main_tv)
     TextView mMainTv;
+
+    @BindView(R.id.main_input_et)
+    EditText mMainEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
             CountdownService.CountdownBinder binder = (CountdownService.CountdownBinder) iBinder;
             mService = binder.getService();
             isBound = true;
-            mService.startCountdown(20);
         }
 
         @Override
@@ -104,6 +107,13 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.main_resume_btn)
     void onResumePressed() {
         mService.resumeCountdown();
+    }
+
+    @OnClick(R.id.main_start_btn)
+    void onStartPressed() {
+        final String minutesAsString = mMainEt.getText().toString();
+        final long minutes = Long.parseLong(minutesAsString);
+        mService.startCountdown(minutes * 60);
     }
 
 }
