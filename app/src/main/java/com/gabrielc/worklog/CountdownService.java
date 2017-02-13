@@ -79,6 +79,10 @@ public class CountdownService extends Service {
         mCountDownTimer.pause();
     }
 
+    public void resumeCountdown() {
+        mCountDownTimer.start();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -90,6 +94,7 @@ public class CountdownService extends Service {
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
+
 
     public class CountdownBinder extends Binder {
         CountdownService getService() {

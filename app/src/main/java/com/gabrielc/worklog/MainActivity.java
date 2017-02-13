@@ -82,9 +82,13 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @OnClick(R.id.main_break_btn)
-    void onBreakPRessed() {
+    void onBreakPressed() {
         mService.pauseCountdown();
     }
 
+    @OnClick(R.id.main_resume_btn)
+    void onResumePressed() {
+        mService.resumeCountdown();
+    }
 
 }
