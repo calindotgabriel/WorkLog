@@ -1,4 +1,4 @@
-package com.gabrielc.worklog;
+package com.gabrielc.worklog.util;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.content.Context;
  * Created by calin on 13.02.2017.
  */
 
-public class Helper {
+public class BackgroundUtils {
 
     private static boolean isMyServiceRunning(Context context, Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

@@ -9,8 +9,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent serviceIntent = new Intent(MainActivity.this, CountdownService.class);
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        int id = android.os.Process.myPid();
+        Logger.d("Activity pid: %d", id);
     }
 
     @Override
@@ -112,8 +117,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.main_start_btn)
     void onStartPressed() {
         final String minutesAsString = mMainEt.getText().toString();
-        final long minutes = Long.parseLong(minutesAsString);
-        mService.startCountdown(minutes * 60);
+        if (!TextUtils.isEmpty(minutesAsString)) {
+            final long minutes = Long.parseLong(minutesAsString);
+            mService.startCountdown(minutes * 60);
+        } else {
+            Toast.makeText(this, "Enter input", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

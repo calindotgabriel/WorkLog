@@ -43,6 +43,8 @@ public class CountdownService extends Service {
                 .setOnlyAlertOnce(true);
 
         Logger.d("onCreate CountdownService");
+        int id = android.os.Process.myPid();
+        Logger.d("Service pid: %d", id);
     }
 
     public void startCountdown(final long seconds) {
