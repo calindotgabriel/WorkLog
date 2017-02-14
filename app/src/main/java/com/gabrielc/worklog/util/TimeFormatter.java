@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
  * Created by calin on 14.02.2017.
  */
 
-public class TimeUtils {
+public class TimeFormatter {
     public static String formatMillis(long millis) {
         final long hours = TimeUnit.MILLISECONDS.toHours(millis);
         final long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);

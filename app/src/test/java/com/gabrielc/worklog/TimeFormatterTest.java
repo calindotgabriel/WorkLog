@@ -1,6 +1,6 @@
 package com.gabrielc.worklog;
 
-import com.gabrielc.worklog.util.TimeUtils;
+import com.gabrielc.worklog.util.TimeFormatter;
 
 import junit.framework.Assert;
 
@@ -14,7 +14,7 @@ public class TimeFormatterTest {
     @Test
     public void formatMillis() {
         long millis = 50 * 1000;
-        final String hhmmss = TimeUtils.formatMillis(millis);
+        final String hhmmss = TimeFormatter.formatMillis(millis);
         Assert.assertEquals("50 sec", hhmmss);
     }
 }

@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import com.gabrielc.worklog.util.TimeFormatter;
 import com.orhanobut.logger.Logger;
 
 /**
@@ -42,20 +43,17 @@ public class CountdownService extends Service {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true);
 
-        Logger.d("onCreate CountdownService");
-        int id = android.os.Process.myPid();
-        Logger.d("Service pid: %d", id);
     }
 
     public void startCountdown(final long seconds) {
         mCountDownTimer = new CountDownTimerPauseable(seconds * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                final long secsUntilFinished = millisUntilFinished / 1000;
-                mBroadcastIntent.putExtra(KEY_COUNTDOWN_INTENT, secsUntilFinished);
+//                final long secsUntilFinished = millisUntilFinished / 1000;
+                mBroadcastIntent.putExtra(KEY_COUNTDOWN_INTENT, millisUntilFinished);
                 sendBroadcast(mBroadcastIntent);
 
-                mNotificationBuilder.setContentText(secsUntilFinished + " secs left");
+                mNotificationBuilder.setContentText(TimeFormatter.formatMillis(millisUntilFinished));
                 mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
             }
 

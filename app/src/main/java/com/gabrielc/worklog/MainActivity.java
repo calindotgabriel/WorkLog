@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gabrielc.worklog.util.TimeFormatter;
 import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;
@@ -22,8 +23,6 @@ import butterknife.OnClick;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final String MINUTES_TO_COUNTDOWN = "MINUTES_TO_COUNTDOWN";
 
     private CountdownService mService;
     private boolean isBound = false;
@@ -39,26 +38,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Logger.d("onCreate");
 
         final Intent serviceIntent = new Intent(MainActivity.this, CountdownService.class);
         bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
-
-        int id = android.os.Process.myPid();
-        Logger.d("Activity pid: %d", id);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Logger.d("onStop");
         unregisterReceiver(mCountdownReceiver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Logger.d("onDestroy");
         if (isBound) {
             unbindService(mServiceConnection);
         }
@@ -96,10 +89,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getExtras() != null) {
-                final long secsUntilFinished = intent.getLongExtra(CountdownService.KEY_COUNTDOWN_INTENT, 0);
-                Logger.d("Activity received %d", secsUntilFinished);
-                final String text = secsUntilFinished + " secounds left";
-                mMainTv.setText(text);
+                final long millisUntilFinished = intent.getLongExtra(CountdownService.KEY_COUNTDOWN_INTENT, 0);
+                mMainTv.setText(TimeFormatter.formatMillis(millisUntilFinished));
             }
         }
     };
